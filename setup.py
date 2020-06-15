@@ -18,7 +18,7 @@ URL = "https://github.com/samdixon/easy-publish"
 EMAIL = "sdixon@posteo.net"
 AUTHOR = "Samuel Dixon"
 REQUIRES_PYTHON = ">=3.6.0"
-VERSION = "0.0.1"
+VERSION = "0.0.4"
 
 # What packages are required for this module to be executed?
 REQUIRED = []
