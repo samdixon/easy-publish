@@ -1,4 +1,4 @@
-import utils
+from easy_publish import utils
 import os
 from dataclasses import dataclass
 
