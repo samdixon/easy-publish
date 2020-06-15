@@ -6,6 +6,7 @@ Easy publish is a Python library that provides a simple abstraction for publishi
 ### Installation
 ---
 Requires: Python >= 3.6
+
 `pip install easy-publish`
 
 
