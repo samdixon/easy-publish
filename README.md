@@ -15,11 +15,11 @@ Requires: Python >= 3.6
 To use easy publish call the `generate_posts` function pointing it to the directory your files are located in. Below is an example flask app with jinja templating that utilizes easy publish, however any web framework/templating engine should work with easy publish.
 
 ```
-from flask import Flask
+from flask import Flask, render_template
 from easy_publish import generate_posts
 
 app = Flask(__name__)
-posts = generate_posts(~/my/blogposts)
+posts = generate_posts("~/my/blogposts")
 
 @app.route("/blog")
 def blog():
