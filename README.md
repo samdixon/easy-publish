@@ -12,8 +12,11 @@ Requires: Python >= 3.6
 
 ## Usage
 
-To use easy publish call the `generate_posts` function pointing it to the directory your files are located in. Below is an example flask app with jinja templating that utilizes easy publish, however any web framework/templating engine should work with easy publish.
+To use easy publish import and call the `generate_posts` function pointing it to the directory your files are located in. The `generate_posts` function returns an object that has two useful data structures: `metadata` and `posts`. `metadata` is a list of metadata about each of your posts(the "Including Markdown" section explains how to include metadata). `posts` is a list of post objects that include the metadata as well as post content.
 
+Below is an example flask app with jinja templating that utilizes easy publish and the `metadata`/`post` objects. While this example uses flask/jinja, any web framework/templating engine should work with easy publish.
+
+#### app.py
 ```
 from flask import Flask, render_template
 from easy_publish import generate_posts
@@ -30,9 +33,7 @@ def blogpost(p):
   return render_template("post.html", post=posts.posts[p])
 ```
 
-Then you can use the `metadata` and `post` objects in your projects. Metadata is useful for listing all of you blog posts while Post is useful for templating the content. `blog.html` and `post.html` might look like the following:
-
-### blog.html
+#### blog.html
 ```
 {{% for post in metadata %}}
   <li>{{ post.title }}</li>
@@ -42,7 +43,7 @@ Then you can use the `metadata` and `post` objects in your projects. Metadata is
 {{% endfor %}}
 ```
 
-### post.html
+#### post.html
 ```
 <h1>{{ post.title }}</h1>
 <h4>{{ post.date }}</h1>
@@ -50,7 +51,7 @@ Then you can use the `metadata` and `post` objects in your projects. Metadata is
 <p>{{ post.content }}</p>
 ```
 
-## Formatting Posts
+## Including Metadata
 
 Easy publish currently expects text files to have a field at the top denoting the metadata. The field must be in the following format:
 
