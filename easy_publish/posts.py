@@ -79,10 +79,10 @@ class PostParser():
     # reading directories recursively
     # potentially hoisting them to the top level
     # not sure how to handle yet
-    def __init__(self, markdown_file):
-        self.markdown_file = markdown_file
+    def __init__(self, file):
+        self.file = file
         self.route= self._get_route_name()
-        self.parsed = self._init_parser(markdown_file)
+        self.parsed = self._init_parser(file)
         self.title = self.parsed['title']
         self.date = self.parsed['date']
         self.author = self.parsed['author']
@@ -93,14 +93,13 @@ class PostParser():
         return f"PostParser('{self.route}')"
 
     def _get_route_name(self):
-        route_with_extension = self.markdown_file.split("/")[-1]
+        route_with_extension = self.file.split("/")[-1]
         route = route_with_extension.split(".")[0]
         return route
 
-    def _init_parser(self, markdown_file):
-        with open(markdown_file, 'r') as file:
-            # might need to change as this removes newlines
-            f = file.read().splitlines()
+    def _init_parser(self, file):
+        with open(file, 'r') as file:
+            f = file.readlines()
 
         index = utils.array_splitter(f)
         metadata_list = f[0:index]
@@ -129,12 +128,7 @@ class PostParser():
 
     @staticmethod
     def _content_parser(content_list):
-        # TODO
-        # This needs to be more obviously.
-        # just putting this here to pick up on later
-        # needs newlines added back or not stripped at all
-        # probably should keep newlines, strip in metadata
-        return content_list
+        return ''.join(content_list)
 
 
 if __name__ == "__main__":
