@@ -55,7 +55,7 @@ class PostCollection():
     def _metadata_cache(posts):
         metadata = []
         for post in posts:
-            metadata.append(Metadata(post.route, post.title, post.author, post.date, post.tags))
+            metadata.append(Metadata(post.route, post.title, post.date, post.author, post.tags))
 
         return metadata
 
