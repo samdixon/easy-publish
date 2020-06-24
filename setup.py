@@ -18,13 +18,13 @@ URL = "https://github.com/samdixon/easy-publish"
 EMAIL = "sdixon@posteo.net"
 AUTHOR = "Samuel Dixon"
 REQUIRES_PYTHON = ">=3.6.0"
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 
 # What packages are required for this module to be executed?
 REQUIRED = []
 
 # What packages are optional?
-EXTRAS = {"dev": [""]}
+EXTRAS = {"dev": ["pytest", "jedi"]}
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------

@@ -1,9 +1,22 @@
 import os
+from typing import TextIO
 
-def listdir_fullpath(directory: str):
-    return [os.path.join(directory, f) for f in os.listdir(directory)]
+def listdir_fullpath(directory: str) -> list:
+    """
+    takes a directory path and lists out all files.
+    returns file names as a list.
+    """
+    directory = os.path.expanduser(directory)
 
-def array_splitter(file: list):
+    file_list = []
+    for file in os.listdir(directory):
+        absolute_file_path = os.path.join(directory, file)
+        if os.path.isfile(absolute_file_path):
+            file_list.append(absolute_file_path)
+
+    return file_list
+
+def array_splitter(file: TextIO) -> int:
     # will refactor later; works fine for now as inline
     try:
         if file.index("~") == 0:
@@ -17,4 +30,3 @@ def array_splitter(file: list):
             return array_splitter(file)
         else:
             return file.index("~\n")
-

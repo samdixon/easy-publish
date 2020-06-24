@@ -2,9 +2,9 @@ from easy_publish import utils
 import os
 from dataclasses import dataclass
 
-__all__ = ["generate_posts"]
+__all__ = ["generate_posts", "generate_parsed_post_list", "PostParser", "PostCollection"]
 
-def generate_posts(directory: str, strict_mode=False):
+def generate_posts(directory: str, author=False, tags_from_file=False, date_from_file=False, title_from_file=False, strict_mode=False):
     """
     Exported helper function that orchestrates and generates posts.
 
@@ -19,14 +19,83 @@ def generate_posts(directory: str, strict_mode=False):
     if strict_mode:
         files = remove_non_markdown_files(files)
 
-    files = utils.listdir_fullpath(os.path.expanduser(directory))
-
-    parsed_posts = []
-    for file in files:
-        parsed_posts.append(PostParser(file))
+    files = utils.listdir_fullpath(directory)
+    parsed_posts = generate_parsed_post_list(files)
 
     post_collection = PostCollection(parsed_posts)
     return post_collection
+
+def generate_parsed_post_list(files: list) -> list:
+    parsed_posts = []
+    for file in files:
+        parsed_posts.append(PostParser(file))
+    return parsed_posts
+
+
+class PostParser():
+    """
+    Parses a given file into structured data outlining a post.
+    """
+    # TODO
+    # reading directories recursively
+    # potentially hoisting them to the top level
+    # not sure how to handle yet
+    def __init__(self, file):
+        self.file = file
+        self.route = self._get_route_name()
+        self.parsed = self._init_parser(file)
+        self.title = self.parsed['title']
+        self.date = self.parsed['date']
+        self.author = self.parsed['author']
+        self.tags = self.parsed['tags']
+        self.content = self.parsed['content']
+
+    def __repr__(self):
+        return f"PostParser('{self.route}')"
+
+    def _get_route_name(self):
+        route_with_extension = self.file.split("/")[-1]
+        route = route_with_extension.split(".")[0]
+        return route
+
+    def _init_parser(self, file):
+        with open(file, 'r') as file:
+            f = file.readlines()
+
+        index = utils.array_splitter(f)
+        metadata_list = f[0:index]
+        content_list = f[index+1:]
+
+        metadata = self._metadata_parser(metadata_list)
+        content = self._content_parser(content_list)
+
+        parsed = metadata
+        parsed['content'] = content
+
+        return parsed
+
+    def _metadata_parser(self, metadata_list):
+        # TODO 
+        # add list parser for tags (split on comma and create list)
+        # currently just a string
+        metadata = {}
+        for item in metadata_list:
+            key, val = item.split(":")
+            key = key.strip()
+            val = val.strip()
+            metadata[key] = val
+        try:
+            metadata['tags'] = self._metadata_tags_parser(metadata['tags'])
+        except KeyError:
+            pass
+        return metadata
+
+    def _metadata_tags_parser(self, tags):
+        tags = tags.split(',')
+        return [tag.strip() for tag in tags]
+
+    def _content_parser(self, content_list):
+        return ''.join(content_list)
 
 class PostCollection():
     """
@@ -69,70 +138,3 @@ class Metadata():
     date: str
     author: str
     tags: str
-
-
-class PostParser():
-    """
-    Parses a given file into structured data outlining a post.
-    """
-    # TODO
-    # reading directories recursively
-    # potentially hoisting them to the top level
-    # not sure how to handle yet
-    def __init__(self, file):
-        self.file = file
-        self.route= self._get_route_name()
-        self.parsed = self._init_parser(file)
-        self.title = self.parsed['title']
-        self.date = self.parsed['date']
-        self.author = self.parsed['author']
-        self.tags = self.parsed['tags']
-        self.content = self.parsed['content']
-
-    def __repr__(self):
-        return f"PostParser('{self.route}')"
-
-    def _get_route_name(self):
-        route_with_extension = self.file.split("/")[-1]
-        route = route_with_extension.split(".")[0]
-        return route
-
-    def _init_parser(self, file):
-        with open(file, 'r') as file:
-            f = file.readlines()
-
-        index = utils.array_splitter(f)
-        metadata_list = f[0:index]
-        content_list = f[index+1:]
-
-        metadata = self._metadata_parser(metadata_list)
-        content = self._content_parser(content_list)
-
-        parsed = metadata
-        parsed['content'] = content
-
-        return parsed
-
-    @staticmethod
-    def _metadata_parser(metadata_list):
-        # TODO 
-        # add list parser for tags (split on comma and create list)
-        # currently just a string
-        metadata = {}
-        for item in metadata_list:
-            key, val = item.split(":")
-            key = key.strip()
-            val = val.strip()
-            metadata[key] = val
-        return metadata
-
-    @staticmethod
-    def _content_parser(content_list):
-        return ''.join(content_list)
-
-
-if __name__ == "__main__":
-    # small testing func
-    # will be removed once tests are integrated
-    p = generate_posts("~/fakenotes")
-    print(p)
