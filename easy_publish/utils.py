@@ -1,6 +1,7 @@
 import os
 from typing import TextIO
 
+
 def listdir_fullpath(directory: str) -> list:
     """
     takes a directory path and lists out all files.
@@ -15,6 +16,7 @@ def listdir_fullpath(directory: str) -> list:
             file_list.append(absolute_file_path)
 
     return file_list
+
 
 def array_splitter(file: TextIO) -> int:
     # will refactor later; works fine for now as inline
