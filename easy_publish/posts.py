@@ -1,6 +1,5 @@
 import os
 import time
-from dataclasses import dataclass
 from easy_publish import utils
 
 __all__ = ["generate_posts"]
@@ -199,15 +198,14 @@ class PostsCollection:
         return dict_posts
 
 
-@dataclass
 class Metadata:
     """
     Dataclass used by Posts.metadata.
     """
-
-    route: str
-    title: str
-    date: str
-    real_date: time.struct_time
-    author: str
-    tags: str
+    def __init__(self, route, title, date, real_date, author, tags):
+        self.route = route
+        self.title = title
+        self.date = date
+        self.real_date = real_date
+        self.author = author
+        self.tags = tags
