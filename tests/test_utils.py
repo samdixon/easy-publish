@@ -1,3 +1,4 @@
+import os
 import pytest
 from easy_publish import utils
 
@@ -7,9 +8,9 @@ def test_listdir_fullpath():
     a = utils.listdir_fullpath("/etc")
     b = utils.listdir_fullpath("~")
     c = utils.listdir_fullpath("./tests/fakenotes")
-    assert len(a) > 5
-    assert len(b) > 5
-    assert len(c) > 2
+    assert os.path.exists(a[0])
+    assert os.path.exists(b[0])
+    assert os.path.exists(c[0])
 
 
 def test_bad_listdir_fullpath():
