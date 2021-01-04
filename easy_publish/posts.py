@@ -89,11 +89,10 @@ class PostParser:
         return parsed
 
     def _metadata_parser(self, metadata_list):
-        # TODO
         metadata = {}
         for item in metadata_list:
-            key, val = item.split(":")
-            key = key.strip()
+            key, val = item.split(":",1)
+            key = key.strip().lower()
             val = val.strip()
             metadata[key] = val
         try:
@@ -117,8 +116,8 @@ class PostParser:
             d = time.strptime(d, self.date_format)
             return d
         except ValueError as e:
-            print(f"Date error on date {original_date}. Expected date format %m-%d-%y.")
-            print("Falling back to string represenation")
+            print(f"Date error on date {original_date}. Expected date format {self.date_format}.")
+            print("Falling back to string representation")
             return original_date
 
     def _content_parser(self, content_list):
@@ -178,7 +177,6 @@ class MetadataCollection:
                 print("Dates failed to sort due to error in datestring.")
                 pass
         else:
-            # error on strict
             print(f"Invalid date sort method: {self.date_sort}")
             pass
 
