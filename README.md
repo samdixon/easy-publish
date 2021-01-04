@@ -2,7 +2,6 @@
 
 Easy publish is a Python library that provides a simple abstraction for publishing text files as blog posts. 
 
-
 ## Installation
 
 Requires: Python >= 3.6
@@ -12,9 +11,9 @@ Requires: Python >= 3.6
 
 ## Usage
 
-To use easy publish import and call the `generate_posts` function pointing it to the directory your files are located in. The `generate_posts` function returns an object that has two useful data structures: `metadata` and `posts`. `metadata` is a list of metadata about each of your posts(the "Including Markdown" section explains how to include metadata). `posts` is a list of post objects that include the metadata as well as post content.
+To use easy publish import and call the `generate_posts` function pointing it to the directory your files are located in. The `generate_posts` function returns an object that has two useful class variables: `metadata` and `posts`. `metadata` is a list of metadata about each of your posts(the "Including Markdown" section explains how to include metadata). `posts` is a list of post objects that include metadata and post content.
 
-Below is an example flask app with jinja templating that utilizes easy publish and the `metadata`/`post` objects. While this example uses flask/jinja, any web framework/templating engine should work with easy publish.
+Below is a simple flask app with jinja templating that utilizes easy publish and the `metadata`/`post` objects. While this example uses flask/jinja, any web framework/templating engine should work with easy publish.
 
 #### app.py
 ```
@@ -22,7 +21,7 @@ from flask import Flask, render_template
 from easy_publish import generate_posts
 
 app = Flask(__name__)
-posts = generate_posts("~/my/blogposts")
+posts = generate_posts("~/path/to/blogposts")
 
 @app.route("/blog")
 def blog():
@@ -53,7 +52,7 @@ def blogpost(p):
 
 ## Including Metadata
 
-Easy publish currently expects text files to have a field at the top denoting the metadata. The field must be in the following format:
+Easy publish expects text files to have a section at the top denoting metadata information. The section should be in the following format:
 
 ```
 ~

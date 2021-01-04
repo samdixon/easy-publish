@@ -41,19 +41,30 @@ def test_generate_posts():
 
 
 def test_Posts(PostsCollection, MetadataCollection):
-    # incomplete
     p = posts.Posts(PostsCollection.posts, MetadataCollection.metadata)
-    assert PostsCollection.posts.__class__.__name__ == "dict"
-    assert MetadataCollection.metadata.__class__.__name__ == "list"
+    assert p.posts.__class__.__name__ == "dict"
+    assert p.metadata.__class__.__name__ == "list"
+    assert len(p.posts) == 3
+    assert p.posts['note'].title == "This is the fakenote"
+
+    assert len(p.metadata) == 3
+    assert p.metadata[0].title == "This is the fakenote"
 
 
-def test_Metadata():
-    pass
+def test_Metadata(fakenotes_file):
+    p = posts.PostParser(fakenotes_file, "date")
+    assert p.route == "note"
+    assert p.file == "./tests/fakenotes/note.md"
+    assert p.title == "This is the fakenote"
+    assert p.date == "5-23-94"
+    assert p.author == "Sam Dixon"
+    assert p.tags == ["first post", "item", "blogpost"]
 
 
 def test_PostParser(fakenotes_file):
     # incomplete
     p = posts.PostParser(fakenotes_file, "date")
+    assert p.route == "note"
     assert p.file == "./tests/fakenotes/note.md"
     assert p.title == "This is the fakenote"
     assert p.date == "5-23-94"
