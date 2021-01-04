@@ -27,9 +27,6 @@ def generate_posts(
         3. For each file given parse and create a list of parsed posts.
         4. Create and return Posts class to user.
     """
-    if strict_mode:
-        files = remove_non_markdown_files(files)
-
     files = utils.listdir_fullpath(directory)
     parsed_posts = generate_parsed_post_list(files, date_format)
 
