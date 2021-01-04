@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "easy-publish"
-version = "0.0.7"
+version = "0.0.10"
 description = ""
 authors = ["samdixon <sdixon@posteo.net>"]
 
