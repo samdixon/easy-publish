@@ -1,9 +1,11 @@
+import logging
 import os
 import time
 from easy_publish import utils
 
 __all__ = ["generate_posts"]
 
+logger = logging.getLogger(__name__)
 
 def generate_posts(
     directory: str,
@@ -14,6 +16,7 @@ def generate_posts(
     date_from_file=False,
     title_from_file=False,
     strict_mode=False,
+    debug=False
 ):
     """
     Exported helper function that orchestrates and generates posts.
@@ -27,6 +30,9 @@ def generate_posts(
         3. For each file given parse and create a list of parsed posts.
         4. Create and return Posts class to user.
     """
+    if debug == True:
+        logging.basicConfig(level=logging.DEBUG)
+
     files = utils.listdir_fullpath(directory)
     parsed_posts = generate_parsed_post_list(files, date_format)
 
@@ -40,7 +46,11 @@ def generate_posts(
 def generate_parsed_post_list(files: list, date_format: str) -> list:
     parsed_posts = []
     for file in files:
-        parsed_posts.append(PostParser(file, date_format))
+        try:
+            parsed_posts.append(PostParser(file, date_format))
+            logger.info(f"Added file to parsed_posts: {file}")
+        except:
+            logger.warning(f"File {file} not parsed; discarding")
     return parsed_posts
 
 
@@ -116,8 +126,8 @@ class PostParser:
             d = time.strptime(d, self.date_format)
             return d
         except ValueError as e:
-            print(f"Date error on date {original_date}. Expected date format {self.date_format}.")
-            print("Falling back to string representation")
+            logger.info(f"Date error on date {original_date}. Expected date format {self.date_format}.")
+            logger.info("Falling back to string representation")
             return original_date
 
     def _content_parser(self, content_list):
@@ -168,16 +178,16 @@ class MetadataCollection:
             try:
                 self.metadata.sort(key=lambda m: m.real_date, reverse=True)
             except TypeError:
-                print("Dates failed to sort due to error in datestring.")
+                logger.warning("Dates failed to sort due to error in datestring.")
                 pass
         elif self.date_sort == "ascending":
             try:
                 self.metadata.sort(key=lambda m: m.real_date)
             except TypeError:
-                print("Dates failed to sort due to error in datestring.")
+                logger.warning("Dates failed to sort due to error in datestring.")
                 pass
         else:
-            print(f"Invalid date sort method: {self.date_sort}")
+            logger.warning(f"Invalid date sort method: {self.date_sort}")
             pass
 
 
